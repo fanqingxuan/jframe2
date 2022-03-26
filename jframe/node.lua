@@ -6,9 +6,9 @@ local table_insert = table.insert
 local string_lower = string.lower
 local string_format = string.format
 
-local utils = require("lor.lib.utils.utils")
-local supported_http_methods = require("lor.lib.methods")
-local ActionHolder = require("lor.lib.holder").ActionHolder
+local utils = require("jframe.utils")
+local supported_http_methods = require("jframe.methods")
+local ActionHolder = require("jframe.holder").ActionHolder
 local handler_error_tip = "handler must be `function` that matches `function(req, res, next) ... end`"
 local middlware_error_tip = "middlware must be `function` that matches `function(req, res, next) ... end`"
 local error_middlware_error_tip = "error middlware must be `function` that matches `function(err, req, res, next) ... end`"

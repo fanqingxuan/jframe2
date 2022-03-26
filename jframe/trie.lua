@@ -10,9 +10,9 @@ local table_insert = table.insert
 local table_remove = table.remove
 local table_concat = table.concat
 
-local utils = require("lor.lib.utils.utils")
-local holder = require("lor.lib.holder")
-local Node = require("lor.lib.node")
+local utils = require("jframe.utils")
+local holder = require("jframe.holder")
+local Node = require("jframe.node")
 local NodeHolder = holder.NodeHolder
 local Matched = holder.Matched
 local mixin = utils.mixin

@@ -4,14 +4,14 @@ local smatch = string.match
 local slen = string.len
 local utils = require("app.libs.utils")
 local pwd_secret = require("app.config.config").pwd_secret
-local lor = require("lor.index")
+local jframe = require("jframe.bootstrap")
 local user_model = require("app.model.user")
 local topic_model = require("app.model.topic")
 local collect_model = require("app.model.collect")
 local comment_model = require("app.model.comment")
 local follow_model = require("app.model.follow")
 local notification_model = require("app.model.notification")
-local user_router = lor:Router()
+local user_router = jframe:Router()
 
 local function isself(req, uid)
     local result = false

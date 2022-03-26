@@ -11,10 +11,10 @@ local table_concat = table.concat
 local string_format = string.format
 local string_lower = string.lower
 
-local utils = require("lor.lib.utils.utils")
-local supported_http_methods = require("lor.lib.methods")
-local debug = require("lor.lib.debug")
-local Trie = require("lor.lib.trie")
+local utils = require("jframe.utils")
+local supported_http_methods = require("jframe.methods")
+local debug = require("jframe.debug")
+local Trie = require("jframe.trie")
 local random = utils.random
 local mixin = utils.mixin
 

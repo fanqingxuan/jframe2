@@ -1,7 +1,7 @@
 local pairs = pairs
 local ipairs = ipairs
-local lor = require("lor.index")
-local errorRouter = lor:Router()
+local jframe = require("jframe.bootstrap")
+local errorRouter = jframe:Router()
 
 
 errorRouter:get("/", function(req, res, next)

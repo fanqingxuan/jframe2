@@ -5,12 +5,15 @@ local ipairs = ipairs
 local pairs = pairs
 local mysql = require("resty.mysql")
 local cjson = require("cjson")
-local utils = require("app.libs.utils")
-local config = require("app.config.config")
+local utils = require("app.utils.utils")
+local config = require("app.config.database")
 local DB = {}
-
+local function server_error() 
+    ngx.status=ngx.HTTP_INTERNAL_SERVER_ERROR 
+    ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR )
+end
 function DB:new(conf)
-    conf = conf or config.mysql
+    conf = conf or config
     local instance = {}
     instance.conf = conf
     setmetatable(instance, { __index = self})
@@ -20,48 +23,45 @@ end
 function DB:exec(sql)
     if not sql then
         ngx.log(ngx.ERR, "sql parse error! please check")
-        return nil, "sql parse error! please check"
+        server_error()
     end
 
     local conf = self.conf
     local db, err = mysql:new()
     if not db then
-        ngx.say("failed to instantiate mysql: ", err)
-        return
+        ngx.log(ngx.ERR,"failed to instantiate mysql: ", err)
+        server_error()
     end
     db:set_timeout(conf.timeout) -- 1 sec
 
     local ok, err, errno, sqlstate = db:connect(conf.connect_config)
     if not ok then
-        ngx.say("failed to connect: ", err, ": ", errno, " ", sqlstate)
-        return
+        ngx.log(ngx.ERR,"failed to connect database: ", err, ": ", errno, " ", sqlstate)
+        server_error()
     end
 
-    ngx.log(ngx.ERR, "connected to mysql, reused_times:", db:get_reused_times(), " sql:", sql)
+    ngx.log(ngx.INFO, "connected to mysql, reused_times:", db:get_reused_times(), " sql:", sql)
 
     db:query("SET NAMES utf8")
     local res, err, errno, sqlstate = db:query(sql)
     if not res then
-        ngx.log(ngx.ERR, "bad result: ", err, ": ", errno, ": ", sqlstate, ".")
+        ngx.log(ngx.ERR, "bad result: ", err, ": ", errno, ": ", sqlstate,": ",sql)
+        server_error()
     end
 
     local ok, err = db:set_keepalive(conf.pool_config.max_idle_timeout, conf.pool_config.pool_size)
     if not ok then
-        ngx.say("failed to set keepalive: ", err)
+        ngx.log(ngx.ERR, "failed to set keepalive: ", err)
+        server_error()
     end
 
     return res, err, errno, sqlstate
 end
 
 
-
 function DB:query(sql, params)
     sql = self:parse_sql(sql, params)
     return self:exec(sql)
-end
-
-function DB:select(sql, params)
-    return self:query(sql, params)
 end
 
 function DB:insert(sql, params)
@@ -74,7 +74,12 @@ function DB:insert(sql, params)
 end
 
 function DB:update(sql, params)
-    return self:query(sql, params)
+    local res = self:query(sql, params)
+    if res and not err then
+        return res.affected_rows, err
+    else
+        return res, err
+    end
 end
 
 function DB:delete(sql, params)
@@ -113,7 +118,7 @@ end
 
 
 function DB:parse_sql(sql, params)
-    if not params or not utils.table_is_array(params) or #params == 0 then
+    if not params or not utils.is_array(params) or #params == 0 then
         return sql
     end
 
@@ -127,9 +132,12 @@ function DB:parse_sql(sql, params)
     end
 
     local t = split(sql,"?")
-    local sql = compose(t, new_params)
-
-    return sql
+    local new_sql = compose(t, new_params)
+    if not new_sql then
+        ngx.log(ngx.ERR, "sql parse error! sql:",sql,',',' params:',cjson.encode(new_params))
+        server_error()
+    end
+    return new_sql
 end 
 
 return DB

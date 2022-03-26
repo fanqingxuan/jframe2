@@ -3,10 +3,10 @@ local type = type
 local xpcall = xpcall
 local setmetatable = setmetatable
 
-local Router = require("lor.lib.router.router")
-local Request = require("lor.lib.request")
-local Response = require("lor.lib.response")
-local supported_http_methods = require("lor.lib.methods")
+local Router = require("jframe.router.router")
+local Request = require("jframe.request")
+local Response = require("jframe.response")
+local supported_http_methods = require("jframe.methods")
 
 local router_conf = {
     strict_route = true,

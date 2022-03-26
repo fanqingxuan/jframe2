@@ -1,19 +1,19 @@
 local sfind = string.find
-local lor = require("lor.index")
-local config = require("app.config.config")
+local jframe = require("jframe.bootstrap")
 local reponse_time_middleware = require("app.middleware.response_time")
 local powered_by_middleware = require("app.middleware.powered_by")
 
-local response = require("lor.lib.response")
+local response = require("jframe.response")
 local ok,router = pcall(require,'app.router')
 if not ok then
+	ngx.log(ngx.ERR, "require error: ".. router)
     return response:status(500):json({
         success = false,
         msg = "500! server error."
     })
 end
 
-local app = lor()
+local app = jframe()
 
 
 -- app:use(reponse_time_middleware({
@@ -23,7 +23,7 @@ local app = lor()
 -- }))
 
 -- filter: add response header
-app:use(powered_by_middleware('Lor Framework'))
+app:use(powered_by_middleware('JFrame Framework'))
 
 
 router(app) -- business routers and routes

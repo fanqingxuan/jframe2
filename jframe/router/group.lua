@@ -8,9 +8,9 @@ local string_lower = string.lower
 local table_insert = table.insert
 local unpack = table.unpack or unpack
 
-local supported_http_methods = require("lor.lib.methods")
-local debug = require("lor.lib.debug")
-local utils = require("lor.lib.utils.utils")
+local supported_http_methods = require("jframe.methods")
+local debug = require("jframe.debug")
+local utils = require("jframe.utils")
 local random = utils.random
 local clone = utils.clone
 local handler_error_tip = "handler must be `function` that matches `function(req, res, next) ... end`"
@@ -37,7 +37,6 @@ function Group:new()
     return group
 end
 
---- a magick for usage like `lor:Router()`
 -- generate a new group for different routes group
 function Group:_call()
     local cloned = clone(self)

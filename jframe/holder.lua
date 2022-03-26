@@ -1,4 +1,4 @@
-local utils = require("lor.lib.utils.utils")
+local utils = require("jframe.utils")
 local ActionHolder = {}
 
 function ActionHolder:new(func, node, action_type)

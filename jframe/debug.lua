@@ -4,7 +4,7 @@ local pairs = pairs
 
 
 local function debug(...)
-    if not LOR_FRAMEWORK_DEBUG then
+    if not JFRAME_FRAMEWORK_DEBUG then
         return
     end
 

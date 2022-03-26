@@ -2,7 +2,7 @@ local sfind = string.find
 local pairs = pairs
 local type = type
 local setmetatable = setmetatable
-local utils = require("lor.lib.utils.utils")
+local utils = require("jframe.utils")
 
 local Request = {}
 

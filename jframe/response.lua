@@ -3,7 +3,7 @@ local type = type
 local setmetatable = setmetatable
 local tinsert = table.insert
 local tconcat = table.concat
-local utils = require("lor.lib.utils.utils")
+local utils = require("jframe.utils")
 
 local Response = {}
 
@@ -135,6 +135,14 @@ end
 
 function Response:set_header(key, value)
     ngx.header[key] = value
+end
+
+function Response:set_headers(headers)
+    if headers ~=nil then
+        for header,value in pairs(headers) do
+            ngx.header[header] = value
+        end
+    end
 end
 
 return Response

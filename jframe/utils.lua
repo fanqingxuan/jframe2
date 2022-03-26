@@ -42,16 +42,6 @@ function _M.is_table_empty(t)
     end
 end
 
-function _M.table_is_array(t)
-    if type(t) ~= "table" then return false end
-    local i = 0
-    for _ in pairs(t) do
-        i = i + 1
-        if t[i] == nil then return false end
-    end
-    return true
-end
-
 function _M.mixin(a, b)
     if a and b then
         for k, _ in pairs(b) do
@@ -85,29 +75,6 @@ function _M.json_decode(str)
     end
 end
 
-function _M.start_with(str, substr)
-    if str == nil or substr == nil then
-        return false
-    end
-    if sfind(str, substr) ~= 1 then
-        return false
-    else
-        return true
-    end
-end
-
-function _M.end_with(str, substr)
-    if str == nil or substr == nil then
-        return false
-    end
-    local str_reverse = sreverse(str)
-    local substr_reverse = sreverse(substr)
-    if sfind(str_reverse, substr_reverse) ~= 1 then
-        return false
-    else
-        return true
-    end
-end
 
 function _M.is_match(uri, pattern)
     if not pattern then
@@ -120,11 +87,6 @@ end
 
 function _M.trim_prefix_slash(s)
     local str, _ = sgsub(s, "^(//*)", "")
-    return str
-end
-
-function _M.trim_suffix_slash(s)
-    local str, _ = sgsub(s, "(//*)$", "")
     return str
 end
 
@@ -148,5 +110,6 @@ function _M.split(str, delimiter)
     end
     return result
 end
+
 
 return _M
